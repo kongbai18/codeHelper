@@ -1,0 +1,84 @@
+{include file="public/header"}
+
+{include file="public/left"}
+
+<!-- 右侧主体开始 -->
+<div class="page-content">
+    <div class="layui-fluid">
+        <div class="layui-row layui-col-space15">
+            <div class="layui-col-md12">
+                <div class="layui-card">
+                    <div class="layui-card-header">
+                        <blockquote class="layui-elem-quote">
+                            生成基础样式文件
+                        </blockquote>
+                    </div>
+                    <div class="layui-card-body" style="padding-top: 35px">
+                        <form class="layui-form" action="{:url('layout/add')}" method="post">
+                            <div class="layui-form-item">
+                                <label for="L_repass" class="layui-form-label">
+                                </label>
+                                <button  class="layui-btn" lay-filter="add" lay-submit="">
+                                    立即生成
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- 右侧主体结束 -->
+<!-- 中部结束 -->
+<script>
+    layui.use(['form', 'layer'],
+        function() {
+            $ = layui.jquery;
+            var form = layui.form,
+                layer = layui.layer;
+
+            //自定义验证规则
+            form.verify({
+                username: function(value) {
+                    if (value.length < 20) {
+                        return '昵称至少得5个字符啊';
+                    }
+                },
+            });
+
+            //监听提交
+            form.on('submit(add)',
+                function(data) {
+                    console.log(data);
+                    $.ajax({
+                        type: "post",
+                        url: data.form.action,
+                        data: data.field,
+                        dataType: "json",
+                        success: function(w){
+                            console.log(w);
+                            if(w.code == 1){
+                                layer.alert(w.msg, {
+                                        icon: 6
+                                    },
+                                    function() {
+                                        //关闭当前frame
+                                        xadmin.close();
+
+                                        // 可以对父窗口进行刷新
+                                        xadmin.father_reload();
+                                    });
+                            }
+                        }
+                    });
+                    //发异步，把数据提交给php
+
+                    return false;
+                });
+
+        });
+</script>
+</body>
+
+</html>

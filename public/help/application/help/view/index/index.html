@@ -1,0 +1,138 @@
+{include file="public/header"}
+
+{include file="public/left"}
+
+<!-- 右侧主体开始 -->
+<div class="page-content">
+    <div class="layui-fluid">
+        <div class="layui-row layui-col-space15">
+            <div class="layui-col-md12">
+                <div class="layui-card">
+                    <div class="layui-card-header">
+                        <blockquote class="layui-elem-quote">
+                            数据库基础配置
+                        </blockquote>
+                    </div>
+                    <div class="layui-card-body" style="padding-top: 35px">
+                        <form class="layui-form" action="{:url('index/edit')}" method="post">
+                            <div class="layui-form-item">
+                                <label for="username" class="layui-form-label">
+                                    数据库类型
+                                </label>
+                                <div class="layui-input-inline">
+                                    <input type="text" id="type" name="type" required="" lay-verify="required"
+                                           autocomplete="off" class="layui-input" value="{$db.type}">
+                                </div>
+                            </div>
+                            <div class="layui-form-item">
+                                <label for="username" class="layui-form-label">
+                                    服务器地址
+                                </label>
+                                <div class="layui-input-inline">
+                                    <input type="text" id="hostname" name="hostname" required="" lay-verify="required"
+                                           autocomplete="off" class="layui-input" value="{$db.hostname}">
+                                </div>
+                            </div>
+                            <div class="layui-form-item">
+                                <label for="username" class="layui-form-label">
+                                    数据库名
+                                </label>
+                                <div class="layui-input-inline">
+                                    <input type="text" id="database" name="database" required="" lay-verify="required"
+                                           autocomplete="off" class="layui-input" value="{$db.database}">
+                                </div>
+                            </div>
+                            <div class="layui-form-item">
+                                <label for="username" class="layui-form-label">
+                                    用户名
+                                </label>
+                                <div class="layui-input-inline">
+                                    <input type="text" id="username" name="username" required="" lay-verify="required"
+                                           autocomplete="off" class="layui-input" value="{$db.username}">
+                                </div>
+                            </div>
+                            <div class="layui-form-item">
+                                <label for="username" class="layui-form-label">
+                                    密码
+                                </label>
+                                <div class="layui-input-inline">
+                                    <input type="text" id="password" name="password" required="" lay-verify="required"
+                                           autocomplete="off" class="layui-input" value="{$db.password}">
+                                </div>
+                            </div>
+                            <div class="layui-form-item">
+                                <label for="L_repass" class="layui-form-label">
+                                </label>
+                                <button  class="layui-btn" lay-filter="edit" lay-submit="">
+                                    修改
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- 右侧主体结束 -->
+<!-- 中部结束 -->
+<script>
+    layui.use(['form', 'layer'],
+        function() {
+            $ = layui.jquery;
+            var form = layui.form,
+                layer = layui.layer;
+
+            //自定义验证规则
+            form.verify({
+                username: function(value) {
+                    if (value.length < 20) {
+                        return '昵称至少得5个字符啊';
+                    }
+                },
+            });
+
+            //监听提交
+            form.on('submit(edit)',
+                function(data) {
+                    console.log(data);
+                    $.ajax({
+                        type: "post",
+                        url: data.form.action,
+                        data: data.field,
+                        dataType: "json",
+                        success: function(w){
+                            console.log(w);
+                            if(w.code == 1){
+                                layer.alert(w.msg, {
+                                        icon: 6
+                                    },
+                                    function() {
+                                        //关闭当前frame
+                                        xadmin.close();
+
+                                        // 可以对父窗口进行刷新
+                                        xadmin.father_reload();
+                                    });
+                            }else {
+                                layer.alert(w.msg, {
+                                        icon: 5
+                                    },
+                                    function() {
+                                        //关闭当前frame
+                                        xadmin.close();
+
+                                        // 可以对父窗口进行刷新
+                                        xadmin.father_reload();
+                                    });
+                            }
+                        }
+                    });
+                    return false;
+                });
+
+        });
+</script>
+</body>
+
+</html>
